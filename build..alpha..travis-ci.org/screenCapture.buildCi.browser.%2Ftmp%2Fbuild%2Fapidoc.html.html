@@ -74,24 +74,6 @@
 
         <li>
 
-            <a class="apidocElementLiA" href="#apidoc.element.require-inject.installGlobally.andClearCache">
-            function <span class="apidocSignatureSpan">require-inject.</span>installGlobally.andClearCache
-            <span class="apidocSignatureSpan">(toLoad, mocks)</span>
-            </a>
-
-        </li>
-
-        <li>
-
-            <a class="apidocElementLiA" href="#apidoc.element.require-inject.toString">
-            function <span class="apidocSignatureSpan">require-inject.</span>toString
-            <span class="apidocSignatureSpan">()</span>
-            </a>
-
-        </li>
-
-        <li>
-
             <a class="apidocElementLiA" href="#apidoc.element.require-inject.withEmptyCache">
             function <span class="apidocSignatureSpan">require-inject.</span>withEmptyCache
             <span class="apidocSignatureSpan">(toLoad, mocks)</span>
@@ -116,45 +98,6 @@
 
             <a class="apidocElementLiA" href="#apidoc.element.require-inject.installGlobally.andClearCache">
             function <span class="apidocSignatureSpan">require-inject.installGlobally.</span>andClearCache
-            <span class="apidocSignatureSpan">(toLoad, mocks)</span>
-            </a>
-
-        </li>
-
-    </ol></li>
-
-    <li class="apidocModuleLi"><a href="#apidoc.module.require-inject.installGlobally.andClearCache">module require-inject.installGlobally.andClearCache</a><ol>
-
-        <li>
-
-            <a class="apidocElementLiA" href="#apidoc.element.require-inject.installGlobally.andClearCache.andClearCache">
-            function <span class="apidocSignatureSpan">require-inject.installGlobally.</span>andClearCache
-            <span class="apidocSignatureSpan">(toLoad, mocks)</span>
-            </a>
-
-        </li>
-
-    </ol></li>
-
-    <li class="apidocModuleLi"><a href="#apidoc.module.require-inject.toString">module require-inject.toString</a><ol>
-
-        <li>
-
-            <a class="apidocElementLiA" href="#apidoc.element.require-inject.toString.toString">
-            function <span class="apidocSignatureSpan">require-inject.</span>toString
-            <span class="apidocSignatureSpan">()</span>
-            </a>
-
-        </li>
-
-    </ol></li>
-
-    <li class="apidocModuleLi"><a href="#apidoc.module.require-inject.withEmptyCache">module require-inject.withEmptyCache</a><ol>
-
-        <li>
-
-            <a class="apidocElementLiA" href="#apidoc.element.require-inject.withEmptyCache.withEmptyCache">
-            function <span class="apidocSignatureSpan">require-inject.</span>withEmptyCache
             <span class="apidocSignatureSpan">(toLoad, mocks)</span>
             </a>
 
@@ -232,54 +175,6 @@ pass to `require` to load the module from your script. This means that for
 
 
     <h2>
-        <a href="#apidoc.element.require-inject.installGlobally.andClearCache" id="apidoc.element.require-inject.installGlobally.andClearCache">
-        function <span class="apidocSignatureSpan">require-inject.</span>installGlobally.andClearCache
-        <span class="apidocSignatureSpan">(toLoad, mocks)</span>
-        </a>
-    </h2>
-    <ul>
-    <li>description and source-code<pre class="apidocCodePre">installGlobally.andClearCache = function (toLoad, mocks) {
-  var callerFilename = getCallerFilename()
-  Object.keys(require.cache).forEach(function (name) {
-    if (name !== callerFilename) delete require.cache[name]
-  })
-  return installGlobally(toLoad, mocks)
-}</pre></li>
-    <li>example usage<pre class="apidocCodePre">...
-* **`var myglobal = requireInject.installGlobally( module, mocks)`**
-
-As with `requireInject`, except that the module and its mocks are left in
-the require cache and any future requires will end up using them too.  This
-is helpful particularly in the case of things that defer loading (that is,
-do async loading).
-
-* **`var myglobal = requireInject.<span class="apidocCodeKeywordSpan">installGlobally.andClearCache</span>(module, mocks)`**
-
-As with `requireInject.installGlobally` but clear the cache first as with
-`requireInject.withClearCache`.  Because this globally clears the cache it
-means that any requires after this point will get fresh copies of their
-required modules, even if you required them previously.
-...</pre></li>
-    </ul>
-
-
-
-    <h2>
-        <a href="#apidoc.element.require-inject.toString" id="apidoc.element.require-inject.toString">
-        function <span class="apidocSignatureSpan">require-inject.</span>toString
-        <span class="apidocSignatureSpan">()</span>
-        </a>
-    </h2>
-    <ul>
-    <li>description and source-code<pre class="apidocCodePre">toString = function () {
-    return text;
-}</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
-    </ul>
-
-
-
-    <h2>
         <a href="#apidoc.element.require-inject.withEmptyCache" id="apidoc.element.require-inject.withEmptyCache">
         function <span class="apidocSignatureSpan">require-inject.</span>withEmptyCache
         <span class="apidocSignatureSpan">(toLoad, mocks)</span>
@@ -289,7 +184,22 @@ required modules, even if you required them previously.
     <li>description and source-code<pre class="apidocCodePre">withEmptyCache = function (toLoad, mocks) {
   return requireInject(toLoad, mocks, true)
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+test('injection leaking at a distance', function (t) {
+t.plan(2)
+var first = require('./lib/a')
+
+first('in', 'out', function (err) { t.ok(err, "shouldn't be able to rename") })
+
+var second = requireInject.<span class="apidocCodeKeywordSpan">withEmptyCache</span>('./lib/a', {
+  'fs': {
+    rename: function (infile, outfile, cb) {
+      cb()
+    }
+  }
+})
+...</pre></li>
     </ul>
 
 
@@ -362,96 +272,21 @@ pass to `require` to load the module from your script. This means that for
   return installGlobally(toLoad, mocks)
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">...
-* **`var myglobal = requireInject.installGlobally( module, mocks)`**
+// Copy the existing cache
+var originalCache = {}
+Object.keys(require.cache).forEach(function (name) {
+  originalCache[name] = require.cache[name]
+})
 
-As with `requireInject`, except that the module and its mocks are left in
-the require cache and any future requires will end up using them too.  This
-is helpful particularly in the case of things that defer loading (that is,
-do async loading).
+var mocked = withEmptyCache
+  ? installGlobally.<span class="apidocCodeKeywordSpan">andClearCache</span>(toLoad, mocks)
+  : installGlobally(toLoad, mocks)
 
-* **`var myglobal = requireInject.installGlobally.<span class="apidocCodeKeywordSpan">andClearCache</span>(module, mocks)`**
-
-As with `requireInject.installGlobally` but clear the cache first as with
-`requireInject.withClearCache`.  Because this globally clears the cache it
-means that any requires after this point will get fresh copies of their
-required modules, even if you required them previously.
+// restore the cache, we can't just assign originalCache to require.cache as the require
+// object is unique to each module, even though require.cache is shared
+Object.keys(require.cache).forEach(function (name) { delete require.cache[name] })
+Object.keys(originalCache).forEach(function (name) { require.cache[name] = originalCache[name] })
 ...</pre></li>
-    </ul>
-
-
-</div>
-
-<div class="apidocSectionDiv">
-<h1><a href="#apidoc.module.require-inject.installGlobally.andClearCache" id="apidoc.module.require-inject.installGlobally.andClearCache">module require-inject.installGlobally.andClearCache</a></h1>
-
-
-    <h2>
-        <a href="#apidoc.element.require-inject.installGlobally.andClearCache.andClearCache" id="apidoc.element.require-inject.installGlobally.andClearCache.andClearCache">
-        function <span class="apidocSignatureSpan">require-inject.installGlobally.</span>andClearCache
-        <span class="apidocSignatureSpan">(toLoad, mocks)</span>
-        </a>
-    </h2>
-    <ul>
-    <li>description and source-code<pre class="apidocCodePre">andClearCache = function (toLoad, mocks) {
-  var callerFilename = getCallerFilename()
-  Object.keys(require.cache).forEach(function (name) {
-    if (name !== callerFilename) delete require.cache[name]
-  })
-  return installGlobally(toLoad, mocks)
-}</pre></li>
-    <li>example usage<pre class="apidocCodePre">...
-* **`var myglobal = requireInject.installGlobally( module, mocks)`**
-
-As with `requireInject`, except that the module and its mocks are left in
-the require cache and any future requires will end up using them too.  This
-is helpful particularly in the case of things that defer loading (that is,
-do async loading).
-
-* **`var myglobal = requireInject.installGlobally.<span class="apidocCodeKeywordSpan">andClearCache</span>(module, mocks)`**
-
-As with `requireInject.installGlobally` but clear the cache first as with
-`requireInject.withClearCache`.  Because this globally clears the cache it
-means that any requires after this point will get fresh copies of their
-required modules, even if you required them previously.
-...</pre></li>
-    </ul>
-
-
-</div>
-
-<div class="apidocSectionDiv">
-<h1><a href="#apidoc.module.require-inject.toString" id="apidoc.module.require-inject.toString">module require-inject.toString</a></h1>
-
-
-    <h2>
-        <a href="#apidoc.element.require-inject.toString.toString" id="apidoc.element.require-inject.toString.toString">
-        function <span class="apidocSignatureSpan">require-inject.</span>toString
-        <span class="apidocSignatureSpan">()</span>
-        </a>
-    </h2>
-    <ul>
-    <li>description and source-code<pre class="apidocCodePre">function toString() { [native code] }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
-    </ul>
-
-
-</div>
-
-<div class="apidocSectionDiv">
-<h1><a href="#apidoc.module.require-inject.withEmptyCache" id="apidoc.module.require-inject.withEmptyCache">module require-inject.withEmptyCache</a></h1>
-
-
-    <h2>
-        <a href="#apidoc.element.require-inject.withEmptyCache.withEmptyCache" id="apidoc.element.require-inject.withEmptyCache.withEmptyCache">
-        function <span class="apidocSignatureSpan">require-inject.</span>withEmptyCache
-        <span class="apidocSignatureSpan">(toLoad, mocks)</span>
-        </a>
-    </h2>
-    <ul>
-    <li>description and source-code<pre class="apidocCodePre">withEmptyCache = function (toLoad, mocks) {
-  return requireInject(toLoad, mocks, true)
-}</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
 
 
