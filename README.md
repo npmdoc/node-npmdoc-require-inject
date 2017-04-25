@@ -1,4 +1,7 @@
-# api documentation for  [require-inject (v1.4.0)](https://github.com/iarna/require-inject#readme)  [![npm package](https://img.shields.io/npm/v/npmdoc-require-inject.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-require-inject) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-require-inject.svg)](https://travis-ci.org/npmdoc/node-npmdoc-require-inject)
+# npmdoc-require-inject
+
+#### basic api documentation for  [require-inject (v1.4.0)](https://github.com/iarna/require-inject#readme)  [![npm package](https://img.shields.io/npm/v/npmdoc-require-inject.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-require-inject) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-require-inject.svg)](https://travis-ci.org/npmdoc/node-npmdoc-require-inject)
+
 #### A simple mock injector compatible needing no instrumentation in the libraries being tested
 
 [![NPM](https://nodei.co/npm/require-inject.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/require-inject)
@@ -64,7 +67,8 @@
     "scripts": {
         "test": "standard && tap test/*.js"
     },
-    "version": "1.4.0"
+    "version": "1.4.0",
+    "bin": {}
 }
 ```
 
